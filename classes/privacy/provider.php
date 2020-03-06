@@ -17,12 +17,12 @@
 /**
  * Privacy Subsystem implementation for block_activity_modules.
  *
- * @package    atto_image
+ * @package    atto_bannerimage
  * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace atto_image\privacy;
+namespace atto_bannerimage\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 

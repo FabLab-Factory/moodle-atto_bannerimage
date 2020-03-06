@@ -43,7 +43,7 @@ var CSS = {
   INPUTSIZE: 'atto_bannerimage_size',
   INPUTWIDTH: 'atto_bannerimage_widthentry',
   IMAGEALTWARNING: 'atto_bannerimage_altwarning',
-  IMAGEBROWSER: 'openimagebrowser',
+  IMAGEBROWSER: 'atto_bannerimage_openimagebrowser',
   IMAGEPRESENTATION: 'atto_bannerimage_presentation',
   INPUTCONSTRAIN: 'atto_bannerimage_constrain',
   INPUTCUSTOMSTYLE: 'atto_bannerimage_customstyle',
@@ -62,31 +62,6 @@ ALIGNMENTS = [
       value: 'text-top',
       margin: '0 0.5em'
   }
-//   }, {
-//       name: 'verticalAlign',
-//       str: 'alignment_middle',
-//       value: 'middle',
-//       margin: '0 0.5em'
-//   }, {
-//       name: 'verticalAlign',
-//       str: 'alignment_bottom',
-//       value: 'text-bottom',
-//       margin: '0 0.5em',
-//       isDefault: true
-//   },
-
-//   // Floats.
-//   {
-//       name: 'float',
-//       str: 'alignment_left',
-//       value: 'left',
-//       margin: '0 0.5em 0 0'
-//   }, {
-//       name: 'float',
-//       str: 'alignment_right',
-//       value: 'right',
-//       margin: '0 0 0 0.5em'
-//   }
 ],
 
 REGEX = {
@@ -96,7 +71,7 @@ REGEX = {
 COMPONENTNAME = 'atto_bannerimage',
 
 TEMPLATE = '' +
-      '<form class="atto_form">' +
+      '<form class="atto_attoform">' +
 
           // Add the repository browser button.
           '{{#if showFilepicker}}' +
@@ -118,48 +93,6 @@ TEMPLATE = '' +
                   'id="{{elementid}}_{{CSS.INPUTURL}}" size="32"/>' +
               '</div>' +
           '{{/if}}' +
-
-        //   // Add the Alt box.
-        //   '<div style="display:none" role="alert" class="alert alert-warning mb-1 {{CSS.IMAGEALTWARNING}}">' +
-        //       '{{get_string "presentationoraltrequired" component}}' +
-        //   '</div>' +
-        //   '<div class="mb-1">' +
-        //   '<label for="{{elementid}}_{{CSS.INPUTALT}}">{{get_string "enteralt" component}}</label>' +
-        //   '<input class="form-control fullwidth {{CSS.INPUTALT}}" type="text" value="" ' +
-        //   'id="{{elementid}}_{{CSS.INPUTALT}}" size="32"/>' +
-
-        //   // Add the presentation select box.
-        //   '<div class="form-check">' +
-        //   '<input type="checkbox" class="form-check-input {{CSS.IMAGEPRESENTATION}}" ' +
-        //       'id="{{elementid}}_{{CSS.IMAGEPRESENTATION}}"/>' +
-        //   '<label class="form-check-label" for="{{elementid}}_{{CSS.IMAGEPRESENTATION}}">' +
-        //       '{{get_string "presentation" component}}' +
-        //   '</label>' +
-        //   '</div>' +
-        //   '</div>' +
-
-        //   // Add the size entry boxes.
-        //   '<div class="mb-1">' +
-        //   '<label class="" for="{{elementid}}_{{CSS.INPUTSIZE}}">{{get_string "size" component}}</label>' +
-        //   '<div id="{{elementid}}_{{CSS.INPUTSIZE}}" class="form-inline {{CSS.INPUTSIZE}}">' +
-        //   '<label class="accesshide" for="{{elementid}}_{{CSS.INPUTWIDTH}}">{{get_string "width" component}}</label>' +
-        //   '<input type="text" class="form-control mr-1 input-mini {{CSS.INPUTWIDTH}}" ' +
-        //   'id="{{elementid}}_{{CSS.INPUTWIDTH}}" size="4"/> x' +
-
-        //   // Add the height entry box.
-        //   '<label class="accesshide" for="{{elementid}}_{{CSS.INPUTHEIGHT}}">{{get_string "height" component}}</label>' +
-        //   '<input type="text" class="form-control ml-1 input-mini {{CSS.INPUTHEIGHT}}" ' +
-        //   'id="{{elementid}}_{{CSS.INPUTHEIGHT}}" size="4"/>' +
-
-        //   // Add the constrain checkbox.
-        //   '<div class="form-check ml-2">' +
-        //   '<input type="checkbox" class="form-check-input {{CSS.INPUTCONSTRAIN}}" ' +
-        //   'id="{{elementid}}_{{CSS.INPUTCONSTRAIN}}"/>' +
-        //   '<label class="form-check-label" for="{{elementid}}_{{CSS.INPUTCONSTRAIN}}">' +
-        //   '{{get_string "constrain" component}}</label>' +
-        //   '</div>' +
-        //   '</div>' +
-        //   '</div>' +
 
           // Add the alignment selector.
           '<div class="form-inline mb-1">' +
@@ -186,20 +119,10 @@ TEMPLATE = '' +
           '</div>' +
       '</form>',
 
-//   IMAGETEMPLATE = '' +
-//       '<img src="{{url}}" alt="{{alt}}" ' +
-//           '{{#if width}}width="{{width}}" {{/if}}' +
-//           '{{#if height}}height="{{height}}" {{/if}}' +
-//           '{{#if presentation}}role="presentation" {{/if}}' +
-//           '{{#if customstyle}}style="{{customstyle}}" {{/if}}' +
-//           '{{#if classlist}}class="{{classlist}}" {{/if}}' +
-//           '{{#if id}}id="{{id}}" {{/if}}' +
-//           '/>';
-
 IMAGETEMPLATE = '' +
           '<img src="{{url}}" alt="Banner image" ' +
               'width="100%"' +
-              'class=""' +
+              'class="bannerimage"' +
               '{{#if id}}id="{{id}}" {{/if}}' +
               '/>';
 
@@ -226,11 +149,11 @@ _selectedImage: null,
 /**
 * A reference to the currently open form.
 *
-* @param _form
+* @param _attoform
 * @type Node
 * @private
 */
-_form: null,
+_attoform: null,
 
 /**
 * The dimensions of the raw image before we manipulate it.
@@ -246,11 +169,11 @@ initializer: function() {
   this.addButton({
       icon: M.util.image_url("ed/" + 'editor_icon1',"atto_bannerimage"),
       callback: this._displayDialogue,
-      tags: 'img',
+      tags: '.bannerimage',
       tagMatchRequiresAll: false
   });
-  this.editor.delegate('dblclick', this._displayDialogue, 'img', this);
-  this.editor.delegate('click', this._handleClick, 'img', this);
+  this.editor.delegate('dblclick', this._displayDialogue, '.bannerimage', this);
+  this.editor.delegate('click', this._handleClick, '.bannerimage', this);
   this.editor.on('drop', this._handleDragDrop, this);
 
   // e.preventDefault needed to stop the default event from clobbering the desired behaviour in some browsers.
@@ -437,7 +360,7 @@ _loadPreviewImage: function(url) {
   var self = this;
 
   image.onerror = function() {
-      var preview = self._form.one('.' + CSS.IMAGEPREVIEW);
+      var preview = self._attoform.one('.' + CSS.IMAGEPREVIEW);
       preview.setStyles({
           'display': 'none'
       });
@@ -454,44 +377,12 @@ _loadPreviewImage: function(url) {
           height: this.height
       };
 
-    //   input = self._form.one('.' + CSS.INPUTWIDTH);
-    //   currentwidth = input.get('value');
-    //   if (currentwidth === '') {
-    //       input.set('value', this.width);
-    //       currentwidth = "" + this.width;
-    //   }
-    //   input = self._form.one('.' + CSS.INPUTHEIGHT);
-    //   currentheight = input.get('value');
-    //   if (currentheight === '') {
-    //       input.set('value', this.height);
-    //       currentheight = "" + this.height;
-    //   }
-      input = self._form.one('.' + CSS.IMAGEPREVIEW);
+      input = self._attoform.one('.' + CSS.IMAGEPREVIEW);
       input.setAttribute('src', this.src);
       input.setStyles({
           'display': 'inline'
       });
 
-    //   input = self._form.one('.' + CSS.INPUTCONSTRAIN);
-    //   if (currentwidth.match(REGEX.ISPERCENT) && currentheight.match(REGEX.ISPERCENT)) {
-    //       input.set('checked', currentwidth === currentheight);
-    //   } else {
-    //       if (this.width === 0) {
-    //           this.width = 1;
-    //       }
-    //       if (this.height === 0) {
-    //           this.height = 1;
-    //       }
-    //       // This is the same as comparing to 3 decimal places.
-    //       widthRatio = Math.round(1000 * parseInt(currentwidth, 10) / this.width);
-    //       heightRatio = Math.round(1000 * parseInt(currentheight, 10) / this.height);
-    //       input.set('checked', widthRatio === heightRatio);
-    //   }
-
-      // Apply the image sizing.
-      //self._autoAdjustSize(self);
-
-      // Centre the dialogue once the preview image has loaded.
       self.getDialogue().centerDialogue();
   };
 
@@ -516,139 +407,26 @@ _getDialogueContent: function() {
           showFilepicker: canShowFilepicker,
           alignments: ALIGNMENTS
       }));
-
-  this._form = content;
+ 
+  this._test = content;
+  console.log(this._test);
+  this._attoform = content;
 
   // Configure the view of the current image.
-  this._applyImageProperties(this._form);
+  this._applyImageProperties(this._attoform);
 
-  this._form.one('.' + CSS.INPUTURL).on('blur', this._urlChanged, this);
-  //this._form.one('.' + CSS.IMAGEPRESENTATION).on('change', this._updateWarning, this);
-  //this._form.one('.' + CSS.INPUTALT).on('change', this._updateWarning, this);
-  //this._form.one('.' + CSS.INPUTWIDTH).on('blur', this._autoAdjustSize, this);
-  //this._form.one('.' + CSS.INPUTHEIGHT).on('blur', this._autoAdjustSize, this, true);
-//   this._form.one('.' + CSS.INPUTCONSTRAIN).on('change', function(event) {
-//       if (event.target.get('checked')) {
-//           this._autoAdjustSize(event);
-//       }
-//   }, this);
-  this._form.one('.' + CSS.INPUTURL).on('blur', this._urlChanged, this);
-  this._form.one('.' + CSS.INPUTSUBMIT).on('click', this._setImage, this);
+  this._attoform.one('.' + CSS.INPUTURL).on('blur', this._urlChanged, this);
+  this._attoform.one('.' + CSS.INPUTURL).on('blur', this._urlChanged, this);
+  this._attoform.one('.' + CSS.INPUTSUBMIT).on('click', this._setImage, this);
 
   if (canShowFilepicker) {
-      this._form.one('.' + CSS.IMAGEBROWSER).on('click', function() {
+      this._attoform.one('.' + CSS.IMAGEBROWSER).on('click', function() {
               this.get('host').showFilepicker('image', this._filepickerCallback, this);
       }, this);
   }
 
   return content;
 },
-
-// _autoAdjustSize: function(e, forceHeight) {
-//   forceHeight = forceHeight || false;
-
-//   var keyField = this._form.one('.' + CSS.INPUTWIDTH),
-//       keyFieldType = 'width',
-//       subField = this._form.one('.' + CSS.INPUTHEIGHT),
-//       subFieldType = 'height',
-//       constrainField = this._form.one('.' + CSS.INPUTCONSTRAIN),
-//       keyFieldValue = keyField.get('value'),
-//       subFieldValue = subField.get('value'),
-//       imagePreview = this._form.one('.' + CSS.IMAGEPREVIEW),
-//       rawPercentage,
-//       rawSize;
-
-//   // If we do not know the image size, do not do anything.
-//   if (!this._rawImageDimensions) {
-//       return;
-//   }
-
-//   // Set the width back to default if it is empty.
-//   if (keyFieldValue === '') {
-//       keyFieldValue = this._rawImageDimensions[keyFieldType];
-//       keyField.set('value', keyFieldValue);
-//       keyFieldValue = keyField.get('value');
-//   }
-
-//   // Clear the existing preview sizes.
-//   imagePreview.setStyles({
-//       width: null,
-//       height: null
-//   });
-
-//   // Now update with the new values.
-//   if (!constrainField.get('checked')) {
-//       // We are not keeping the image proportion - update the preview accordingly.
-
-//       // Width.
-//       if (keyFieldValue.match(REGEX.ISPERCENT)) {
-//           rawPercentage = parseInt(keyFieldValue, 10);
-//           rawSize = this._rawImageDimensions.width / 100 * rawPercentage;
-//           imagePreview.setStyle('width', rawSize + 'px');
-//       } else {
-//           imagePreview.setStyle('width', keyFieldValue + 'px');
-//       }
-
-//       // Height.
-//       if (subFieldValue.match(REGEX.ISPERCENT)) {
-//           rawPercentage = parseInt(subFieldValue, 10);
-//           rawSize = this._rawImageDimensions.height / 100 * rawPercentage;
-//           imagePreview.setStyle('height', rawSize + 'px');
-//       } else {
-//           imagePreview.setStyle('height', subFieldValue + 'px');
-//       }
-//   } else {
-//       // We are keeping the image in proportion.
-//       if (forceHeight) {
-//           // By default we update based on width. Swap the key and sub fields around to achieve a height-based scale.
-//           var _temporaryValue;
-//           _temporaryValue = keyField;
-//           keyField = subField;
-//           subField = _temporaryValue;
-
-//           _temporaryValue = keyFieldType;
-//           keyFieldType = subFieldType;
-//           subFieldType = _temporaryValue;
-
-//           _temporaryValue = keyFieldValue;
-//           keyFieldValue = subFieldValue;
-//           subFieldValue = _temporaryValue;
-//       }
-
-//       if (keyFieldValue.match(REGEX.ISPERCENT)) {
-//           // This is a percentage based change. Copy it verbatim.
-//           subFieldValue = keyFieldValue;
-
-//           // Set the width to the calculated pixel width.
-//           rawPercentage = parseInt(keyFieldValue, 10);
-//           rawSize = this._rawImageDimensions.width / 100 * rawPercentage;
-
-//           // And apply the width/height to the container.
-//           imagePreview.setStyle('width', rawSize);
-//           rawSize = this._rawImageDimensions.height / 100 * rawPercentage;
-//           imagePreview.setStyle('height', rawSize);
-//       } else {
-//           // Calculate the scaled subFieldValue from the keyFieldValue.
-//           subFieldValue = Math.round((keyFieldValue / this._rawImageDimensions[keyFieldType]) *
-//                   this._rawImageDimensions[subFieldType]);
-
-//           if (forceHeight) {
-//               imagePreview.setStyles({
-//                   'width': subFieldValue,
-//                   'height': keyFieldValue
-//               });
-//           } else {
-//               imagePreview.setStyles({
-//                   'width': keyFieldValue,
-//                   'height': subFieldValue
-//               });
-//           }
-//       }
-
-//       // Update the subField's value within the form to reflect the changes.
-//       subField.set('value', subFieldValue);
-//   }
-// },
 
 /**
 * Update the dialogue after an image was selected in the File Picker.
@@ -660,12 +438,15 @@ _getDialogueContent: function() {
 */
 _filepickerCallback: function(params) {
   if (params.url !== '') {
-      var input = this._form.one('.' + CSS.INPUTURL);
-      input.set('value', params.url);
+      console.log(this._attoform);
+      console.log(CSS.INPUTURL);
+      console.log(this._test.one('.' + CSS.INPUTURL));
 
-      // Auto set the width and height.
-      //this._form.one('.' + CSS.INPUTWIDTH).set('value', '');
-      //this._form.one('.' + CSS.INPUTHEIGHT).set('value', '');
+      var input2 = this._test.one('.' + CSS.INPUTURL);
+      input2.set('value', params.url);
+
+      var input = this._attoform.one('.' + CSS.INPUTURL);
+      input.set('value', params.url);
 
       // Load the preview image.
       this._loadPreviewImage(params.url);
@@ -704,25 +485,11 @@ _applyImageProperties: function(form) {
   if (properties.customstyle) {
       form.one('.' + CSS.INPUTCUSTOMSTYLE).set('value', properties.customstyle);
   }
-//   if (properties.width) {
-//       form.one('.' + CSS.INPUTWIDTH).set('value', properties.width);
-//   }
-//   if (properties.height) {
-//       form.one('.' + CSS.INPUTHEIGHT).set('value', properties.height);
-//   }
-//   if (properties.alt) {
-//       form.one('.' + CSS.INPUTALT).set('value', properties.alt);
-//   }
+
   if (properties.src) {
       form.one('.' + CSS.INPUTURL).set('value', properties.src);
       this._loadPreviewImage(properties.src);
   }
-//   if (properties.presentation) {
-//       form.one('.' + CSS.IMAGEPRESENTATION).set('checked', 'checked');
-//   }
-
-  // Update the image preview based on the form properties.
-  //this._autoAdjustSize();
 },
 
 /**
@@ -738,16 +505,12 @@ _getSelectedImageProperties: function() {
   var properties = {
           src: null,
           alt: null,
-          //width: null,
-          //height: null,
           align: '',
           presentation: false
       },
 
       // Get the current selection.
       images = this.get('host').getSelectedNodes(),
-     // width,
-      //height,
       style,
       image;
 
@@ -762,24 +525,8 @@ _getSelectedImageProperties: function() {
       style = image.getAttribute('style');
       properties.customstyle = style;
 
-    //   width = image.getAttribute('width');
-    //   if (!width.match(REGEX.ISPERCENT)) {
-    //       width = parseInt(width, 10);
-    //   }
-    //   height = image.getAttribute('height');
-    //   if (!height.match(REGEX.ISPERCENT)) {
-    //       height = parseInt(height, 10);
-    //   }
-
-    //   if (width !== 0) {
-    //       properties.width = width;
-    //   }
-    //   if (height !== 0) {
-    //       properties.height = height;
-    //   }
       this._getAlignmentPropeties(image, properties);
       properties.src = image.getAttribute('src');
-      //properties.alt = image.getAttribute('alt') || '';
       properties.presentation = (image.get('role') === 'presentation');
       return properties;
   }
@@ -831,7 +578,7 @@ _getAlignmentPropeties: function(image, properties) {
 * @private
 */
 _urlChanged: function() {
-  var input = this._form.one('.' + CSS.INPUTURL);
+  var input = this._attoform.one('.' + CSS.INPUTURL);
 
   if (input.get('value') !== '') {
       // Load the preview image.
@@ -847,19 +594,14 @@ _urlChanged: function() {
 * @private
 */
 _setImage: function(e) {
-  var form = this._form,
+  var form = this._attoform,
       url = form.one('.' + CSS.INPUTURL).get('value'),
-      //alt = form.one('.' + CSS.INPUTALT).get('value'),
-      //width = form.one('.' + CSS.INPUTWIDTH).get('value'),
-      //height = form.one('.' + CSS.INPUTHEIGHT).get('value'),
       alignment = this._getAlignmentClass(form.one('.' + CSS.INPUTALIGNMENT).get('value')),
-      //presentation = form.one('.' + CSS.IMAGEPRESENTATION).get('checked'),
-      //constrain = form.one('.' + CSS.INPUTCONSTRAIN).get('checked'),
       imagehtml,
       customstyle = form.one('.' + CSS.INPUTCUSTOMSTYLE).get('value'),
       classlist = [],
       host = this.get('host');
-
+    console.log(url);
   e.preventDefault();
 
   // Check if there are any accessibility issues.
@@ -876,29 +618,12 @@ _setImage: function(e) {
           host.setSelection(this._currentSelection);
       }
 
-    //   if (constrain) {
-    //       classlist.push(CSS.RESPONSIVE);
-    //   }
-
       // Add the alignment class for the image.
       classlist.push(alignment);
-
-    //   if (!width.match(REGEX.ISPERCENT) && isNaN(parseInt(width, 10))) {
-    //       form.one('.' + CSS.INPUTWIDTH).focus();
-    //       return;
-    //   }
-    //   if (!height.match(REGEX.ISPERCENT) && isNaN(parseInt(height, 10))) {
-    //       form.one('.' + CSS.INPUTHEIGHT).focus();
-    //       return;
-    //   }
 
       var template = Y.Handlebars.compile(IMAGETEMPLATE);
       imagehtml = template({
           url: url,
-          //alt: alt,
-         // width: width,
-         // height: height,
-         // presentation: presentation,
           customstyle: customstyle,
           classlist: classlist.join(' ')
       });
@@ -909,7 +634,7 @@ _setImage: function(e) {
   }
 
   this.getDialogue({
-      focusAfterHide: null
+    focusAfterHide: null
   }).hide();
 
 },
@@ -964,23 +689,6 @@ _getAlignmentClass: function(alignment) {
 * @private
 */
 _updateWarning: function() {
-//   var form = this._form,
-//       state = true,
-//       alt = form.one('.' + CSS.INPUTALT).get('value'),
-//       presentation = form.one('.' + CSS.IMAGEPRESENTATION).get('checked');
-//   if (alt === '' && !presentation) {
-//       form.one('.' + CSS.IMAGEALTWARNING).setStyle('display', 'block');
-//       form.one('.' + CSS.INPUTALT).setAttribute('aria-invalid', true);
-//       form.one('.' + CSS.IMAGEPRESENTATION).setAttribute('aria-invalid', true);
-//       state = true;
-//   } else {
-//       form.one('.' + CSS.IMAGEALTWARNING).setStyle('display', 'none');
-//       form.one('.' + CSS.INPUTALT).setAttribute('aria-invalid', false);
-//       form.one('.' + CSS.IMAGEPRESENTATION).setAttribute('aria-invalid', false);
-//       state = false;
-//   }
-//   this.getDialogue().centerDialogue();
-//   return state;
         return false;
 }
 });

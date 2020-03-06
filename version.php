@@ -29,5 +29,5 @@ $plugin->requires  = 2013110500;        // Requires this Moodle version.
 $plugin->component = 'atto_bannerimage';  // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_BETA;
 // Human readable version informatiomn
-$plugin->release   = '1.0.0 (Build 2020030600)';
+$plugin->release   = '1.0.1 (Build 2020030600)';
 
