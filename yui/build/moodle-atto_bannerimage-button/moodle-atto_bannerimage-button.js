@@ -408,8 +408,6 @@ _getDialogueContent: function() {
           alignments: ALIGNMENTS
       }));
  
-  this._test = content;
-  console.log(this._test);
   this._attoform = content;
 
   // Configure the view of the current image.
@@ -419,11 +417,13 @@ _getDialogueContent: function() {
   this._attoform.one('.' + CSS.INPUTURL).on('blur', this._urlChanged, this);
   this._attoform.one('.' + CSS.INPUTSUBMIT).on('click', this._setImage, this);
 
-  if (canShowFilepicker) {
-      this._attoform.one('.' + CSS.IMAGEBROWSER).on('click', function() {
-              this.get('host').showFilepicker('image', this._filepickerCallback, this);
-      }, this);
-  }
+//   if (canShowFilepicker) {
+    content.delegate('click', function(e) {
+        var element = this._attoform;
+        e.preventDefault();
+        this.get('host').showFilepicker('image', this._getFilepickerCallback(element), this);
+    }, '.atto_bannerimage_openimagebrowser', this);
+//   }
 
   return content;
 },
@@ -438,13 +438,6 @@ _getDialogueContent: function() {
 */
 _filepickerCallback: function(params) {
   if (params.url !== '') {
-      console.log(this._attoform);
-      console.log(CSS.INPUTURL);
-      console.log(this._test.one('.' + CSS.INPUTURL));
-
-      var input2 = this._test.one('.' + CSS.INPUTURL);
-      input2.set('value', params.url);
-
       var input = this._attoform.one('.' + CSS.INPUTURL);
       input.set('value', params.url);
 
@@ -452,6 +445,26 @@ _filepickerCallback: function(params) {
       this._loadPreviewImage(params.url);
   }
 },
+
+/**
+     * Returns the callback for the file picker to call after a file has been selected.
+     *
+     * @method _getFilepickerCallback
+     * @param  {Y.Node} element The element which triggered the callback
+     * @return {Function} The function to be used as a callback when the file picker returns the file
+     * @private
+     */
+    _getFilepickerCallback: function(element) {
+        return function(params) {
+            if (params.url !== '') {
+                var input = element.one('.' + CSS.INPUTURL);
+                input.set('value', params.url);
+
+                // Load the preview image.
+                // this._loadPreviewImage(element,params.url);
+            }
+        };
+    },
 
 /**
 * Applies properties of an existing image to the image dialogue for editing.
@@ -600,7 +613,7 @@ _setImage: function(e) {
       customstyle = form.one('.' + CSS.INPUTCUSTOMSTYLE).get('value'),
       classlist = [],
       host = this.get('host');
-    console.log(url);
+
   e.preventDefault();
 
   // Check if there are any accessibility issues.
