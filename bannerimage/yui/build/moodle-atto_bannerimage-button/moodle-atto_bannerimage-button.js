@@ -417,13 +417,13 @@ _getDialogueContent: function() {
   this._attoform.one('.' + CSS.INPUTURL).on('blur', this._urlChanged, this);
   this._attoform.one('.' + CSS.INPUTSUBMIT).on('click', this._setImage, this);
 
-//   if (canShowFilepicker) {
-    content.delegate('click', function(e) {
-        var element = this._attoform;
-        e.preventDefault();
-        this.get('host').showFilepicker('image', this._getFilepickerCallback(element), this);
-    }, '.atto_bannerimage_openimagebrowser', this);
-//   }
+   if (canShowFilepicker) {
+        content.delegate('click', function(e) {
+            var element = this._attoform;
+            e.preventDefault();
+            this.get('host').showFilepicker('image', this._getFilepickerCallback(element), this);
+        }, '.atto_bannerimage_openimagebrowser', this);
+   }
 
   return content;
 },
@@ -450,7 +450,7 @@ _filepickerCallback: function(params) {
      * Returns the callback for the file picker to call after a file has been selected.
      *
      * @method _getFilepickerCallback
-     * @param  {Y.Node} element The element which triggered the callback
+     * @param  {Y.Node} element The element which triggered the callback (atto form)
      * @return {Function} The function to be used as a callback when the file picker returns the file
      * @private
      */
@@ -461,7 +461,27 @@ _filepickerCallback: function(params) {
                 input.set('value', params.url);
 
                 // Load the preview image.
-                // this._loadPreviewImage(element,params.url);
+                var image = new Image();
+
+                image.onerror = function() {
+                    var preview = element.one('.' + CSS.IMAGEPREVIEW);
+                    preview.setStyles({
+                        'display': 'none'
+                    });
+                };
+
+                image.onload = function() {
+                    var input;
+
+                    input = element.one('.' + CSS.IMAGEPREVIEW);
+                    input.setAttribute('src', this.src);
+                    input.setStyles({
+                        'display': 'inline'
+                    });
+
+                };
+
+                image.src = params.url;
             }
         };
     },
